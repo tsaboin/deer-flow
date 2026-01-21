@@ -32,16 +32,32 @@
     "addNewMCPServers": "添加新的 MCP 服务器",
     "mcpConfigDescription": "DeerFlow 使用标准 JSON MCP 配置来创建新服务器。",
     "pasteConfigBelow": "将您的配置粘贴到下面，然后点击\"添加\"来添加新服务器。",
+    "rag": {
+      "title": "资源",
+      "description": "在此管理您的知识库资源。上传 Markdown 或文本文件以供检索索引。",
+      "upload": "上传",
+      "uploading": "上传中...",
+      "uploadSuccess": "文件上传成功",
+      "uploadFailed": "文件上传失败",
+      "emptyFile": "无法上传空文件",
+      "loading": "正在加载资源...",
+      "noResources": "未找到资源。上传文件以开始使用。"
+    },
     "add": "添加",
     "general": {
       "title": "通用",
       "autoAcceptPlan": "允许自动接受计划",
+      "enableClarification": "允许澄清",
+      "maxClarificationRounds": "最大澄清回合数",
+      "maxClarificationRoundsDescription": "启用澄清时允许的最大澄清回合数，默认是3。",
       "maxPlanIterations": "最大计划迭代次数",
       "maxPlanIterationsDescription": "设置为 1 进行单步规划。设置为 2 或更多以启用重新规划。",
       "maxStepsOfPlan": "研究计划的最大步骤数",
       "maxStepsDescription": "默认情况下，每个研究计划有 3 个步骤。",
       "maxSearchResults": "最大搜索结果数",
-      "maxSearchResultsDescription": "默认情况下，每个搜索步骤有 3 个结果。"
+      "maxSearchResultsDescription": "默认情况下，每个搜索步骤有 3 个结果。",
+      "enableWebSearch": "启用网络搜索",
+      "enableWebSearchDescription": "禁用后将仅使用本地 RAG 知识库。适用于无网络环境。"
     },
     "mcp": {
       "title": "MCP 服务器",
@@ -49,8 +65,15 @@
       "learnMore": "了解更多关于 MCP 的信息。",
       "enableDisable": "启用/禁用服务器",
       "deleteServer": "删除服务器",
+      "editServer": "编辑服务器",
+      "refreshServer": "刷新服务器",
+      "editServerDescription": "编辑 MCP 服务器配置",
+      "editServerNote": "以 JSON 格式更新服务器配置",
       "disabled": "已禁用",
-      "new": "新增"
+      "new": "新增",
+      "invalidJson": "无效的 JSON 格式",
+      "validationFailed": "验证失败",
+      "missingServerName": "缺少服务器名称"
     },
     "about": {
       "title": "关于"
@@ -66,7 +89,9 @@
       "news": "新闻",
       "newsDesc": "事实、简明、公正的新闻风格",
       "socialMedia": "社交媒体",
-      "socialMediaDesc": "简洁有趣，易于传播"
+      "socialMediaDesc": "简洁有趣，易于传播",
+      "strategicInvestment": "战略投资",
+      "strategicInvestmentDesc": "面向战略投资机构的深度综合分析，提供可执行的投资洞察"
     }
   },
   "footer": {
@@ -118,7 +143,14 @@
       "generatePodcast": "生成播客",
       "edit": "编辑",
       "copy": "复制",
-      "downloadReport": "下载报告为 Markdown",
+      "downloadReport": "下载报告",
+      "downloadMarkdown": "Markdown (.md)",
+      "downloadHTML": "HTML (.html)",
+      "downloadPDF": "PDF (.pdf)",
+      "downloadWord": "Word (.docx)",
+      "downloadImage": "图片 (.png)",
+      "exportFailed": "导出失败，请重试",
+      "evaluateReport": "评估报告质量",
       "searchingFor": "搜索",
       "reading": "阅读中",
       "runningPythonCode": "运行 Python 代码",
@@ -131,6 +163,31 @@
       "podcast": "播客",
       "errorGeneratingPodcast": "生成播客时出错。请重试。",
       "downloadPodcast": "下载播客"
+    },
+    "evaluation": {
+      "title": "报告质量评估",
+      "description": "使用自动化指标和 AI 分析评估您的报告。",
+      "evaluating": "正在评估报告...",
+      "analyzing": "正在进行深度分析...",
+      "overallScore": "总体评分",
+      "metrics": "报告指标",
+      "wordCount": "字数",
+      "citations": "引用数",
+      "sources": "独立来源",
+      "images": "图片数",
+      "sectionCoverage": "章节覆盖率",
+      "detailedAnalysis": "详细分析",
+      "deepEvaluation": "深度评估 (AI)",
+      "strengths": "优势",
+      "weaknesses": "改进建议",
+      "scores": {
+        "factual_accuracy": "事实准确性",
+        "completeness": "完整性",
+        "coherence": "连贯性",
+        "relevance": "相关性",
+        "citation_quality": "引用质量",
+        "writing_quality": "写作质量"
+      }
     },
     "messages": {
       "replaying": "回放中",

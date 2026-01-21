@@ -38,6 +38,9 @@ class ChatRequest(BaseModel):
     thread_id: Optional[str] = Field(
         "__default__", description="A specific conversation identifier"
     )
+    locale: Optional[str] = Field(
+        "en-US", description="Language locale for the conversation (e.g., en-US, zh-CN)"
+    )
     max_plan_iterations: Optional[int] = Field(
         1, description="The maximum number of plan iterations"
     )
@@ -59,11 +62,26 @@ class ChatRequest(BaseModel):
     enable_background_investigation: Optional[bool] = Field(
         True, description="Whether to get background investigation before plan"
     )
+    enable_web_search: Optional[bool] = Field(
+        True, description="Whether to enable web search, set to False to use only local RAG"
+    )
     report_style: Optional[ReportStyle] = Field(
         ReportStyle.ACADEMIC, description="The style of the report"
     )
     enable_deep_thinking: Optional[bool] = Field(
         False, description="Whether to enable deep thinking"
+    )
+    enable_clarification: Optional[bool] = Field(
+        None,
+        description="Whether to enable multi-turn clarification (default: None, uses State default=False)",
+    )
+    max_clarification_rounds: Optional[int] = Field(
+        None,
+        description="Maximum number of clarification rounds (default: None, uses State default=3)",
+    )
+    interrupt_before_tools: List[str] = Field(
+        default_factory=list,
+        description="List of tool names to interrupt before execution (e.g., ['db_tool', 'api_tool'])",
     )
 
 
@@ -89,6 +107,9 @@ class GeneratePodcastRequest(BaseModel):
 
 class GeneratePPTRequest(BaseModel):
     content: str = Field(..., description="The content of the ppt")
+    locale: str = Field(
+        "en-US", description="Language locale for the conversation (e.g., en-US, zh-CN)"
+    )
 
 
 class GenerateProseRequest(BaseModel):

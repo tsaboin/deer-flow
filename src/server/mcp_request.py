@@ -10,7 +10,10 @@ class MCPServerMetadataRequest(BaseModel):
     """Request model for MCP server metadata."""
 
     transport: str = Field(
-        ..., description="The type of MCP server connection (stdio or sse)"
+        ...,
+        description=(
+            "The type of MCP server connection (stdio or sse or streamable_http)"
+        ),
     )
     command: Optional[str] = Field(
         None, description="The command to execute (for stdio type)"
@@ -21,9 +24,23 @@ class MCPServerMetadataRequest(BaseModel):
     url: Optional[str] = Field(
         None, description="The URL of the SSE server (for sse type)"
     )
-    env: Optional[Dict[str, str]] = Field(None, description="Environment variables")
-    timeout_seconds: Optional[int] = Field(
-        None, description="Optional custom timeout in seconds for the operation"
+    env: Optional[Dict[str, str]] = Field(
+        None, description="Environment variables (for stdio type)"
+    )
+    headers: Optional[Dict[str, str]] = Field(
+        None, description="HTTP headers (for sse/streamable_http type)"
+    )
+    timeout_seconds: Optional[int] = Field(        
+        None, 
+        ge=1,
+        le=3600,
+        description="Optional custom timeout in seconds for the operation (default: 60, range: 1-3600)"
+    )
+    sse_read_timeout: Optional[int] = Field(
+        None,
+        ge=1,
+        le=3600, 
+        description="Optional SSE read timeout in seconds (for sse type, default: 30, range: 1-3600)"
     )
 
 
@@ -31,7 +48,10 @@ class MCPServerMetadataResponse(BaseModel):
     """Response model for MCP server metadata."""
 
     transport: str = Field(
-        ..., description="The type of MCP server connection (stdio or sse)"
+        ...,
+        description=(
+            "The type of MCP server connection (stdio or sse or streamable_http)"
+        ),
     )
     command: Optional[str] = Field(
         None, description="The command to execute (for stdio type)"
@@ -42,7 +62,12 @@ class MCPServerMetadataResponse(BaseModel):
     url: Optional[str] = Field(
         None, description="The URL of the SSE server (for sse type)"
     )
-    env: Optional[Dict[str, str]] = Field(None, description="Environment variables")
+    env: Optional[Dict[str, str]] = Field(
+        None, description="Environment variables (for stdio type)"
+    )
+    headers: Optional[Dict[str, str]] = Field(
+        None, description="HTTP headers (for sse/streamable_http type)"
+    )
     tools: List = Field(
         default_factory=list, description="Available tools from the MCP server"
     )

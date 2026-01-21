@@ -67,7 +67,18 @@ class Retriever(abc.ABC):
     @abc.abstractmethod
     def list_resources(self, query: str | None = None) -> list[Resource]:
         """
-        List resources from the rag provider.
+        List resources from the rag provider (synchronous version).
+        """
+        pass
+
+    @abc.abstractmethod
+    async def list_resources_async(self, query: str | None = None) -> list[Resource]:
+        """
+        List resources from the rag provider (asynchronous version).
+        
+        Implementations should choose between:
+        - Providing native async I/O operations for true non-blocking behavior
+        - Using asyncio.to_thread() to wrap the synchronous version if async I/O is not available
         """
         pass
 
@@ -76,6 +87,68 @@ class Retriever(abc.ABC):
         self, query: str, resources: list[Resource] = []
     ) -> list[Document]:
         """
-        Query relevant documents from the resources.
+        Query relevant documents from the resources (synchronous version).
         """
         pass
+
+    @abc.abstractmethod
+    async def query_relevant_documents_async(
+        self, query: str, resources: list[Resource] = []
+    ) -> list[Document]:
+        """
+        Query relevant documents from the resources (asynchronous version).
+        
+        Implementations should choose between:
+        - Providing native async I/O operations for true non-blocking behavior
+        - Using asyncio.to_thread() to wrap the synchronous version if async I/O is not available
+        """
+        pass
+
+    def ingest_file(self, file_content: bytes, filename: str, **kwargs) -> Resource:
+        """
+        Ingest a file into the RAG provider and register it as a :class:`Resource`.
+
+        This method is intended to be overridden by concrete retriever implementations.
+        The default implementation always raises :class:`NotImplementedError`.
+
+        Parameters
+        ----------
+        file_content:
+            Raw bytes of the file to ingest. For text-based formats, implementations
+            will typically assume UTF-8 encoding unless documented otherwise. Binary
+            formats (such as PDF, images, or office documents) should be passed as
+            their original bytes.
+        filename:
+            The original filename, including extension (e.g. ``"report.pdf"``). This
+            can be used by implementations to infer the file type, MIME type, or to
+            populate the resulting resource's title.
+        **kwargs:
+            Additional, implementation-specific options. Examples may include:
+
+            - Explicit MIME type or file type hints.
+            - Additional metadata to associate with the resource.
+            - Chunking, indexing, or preprocessing parameters.
+
+            Unsupported or invalid keyword arguments may result in an exception being
+            raised by the concrete implementation.
+
+        Returns
+        -------
+        Resource
+            A :class:`Resource` instance describing the ingested file, including its
+            URI and title. The exact URI scheme and how the resource is stored are
+            implementation-defined.
+
+        Raises
+        ------
+        NotImplementedError
+            Always raised by the base ``Retriever`` implementation. Concrete
+            implementations should override this method to provide functionality.
+        ValueError
+            May be raised by implementations if the input bytes, filename, or
+            provided options are invalid.
+        RuntimeError
+            May be raised by implementations to signal unexpected ingestion or
+            storage failures (e.g. backend service errors).
+        """
+        raise NotImplementedError("ingest_file is not implemented")

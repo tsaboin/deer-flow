@@ -4,10 +4,11 @@
 """
 Server script for running the DeerFlow API.
 """
-import os
-import asyncio
+
 import argparse
+import asyncio
 import logging
+import os
 import signal
 import sys
 
@@ -78,14 +79,29 @@ if __name__ == "__main__":
     if args.reload:
         reload = True
 
+    # Check for DEBUG environment variable to override log level
+    if os.getenv("DEBUG", "").lower() in ("true", "1", "yes"):
+        log_level = "debug"
+    else:
+        log_level = args.log_level
+
     try:
         logger.info(f"Starting DeerFlow API server on {args.host}:{args.port}")
+        logger.info(f"Log level: {log_level.upper()}")
+        
+        # Set the appropriate logging level for the src package if debug is enabled
+        if log_level.lower() == "debug":
+            logging.getLogger("src").setLevel(logging.DEBUG)
+            logging.getLogger("langchain").setLevel(logging.DEBUG)
+            logging.getLogger("langgraph").setLevel(logging.DEBUG)
+            logger.info("DEBUG logging enabled for src, langchain, and langgraph packages - detailed diagnostic information will be logged")
+        
         uvicorn.run(
             "src.server:app",
             host=args.host,
             port=args.port,
             reload=reload,
-            log_level=args.log_level,
+            log_level=log_level,
         )
     except Exception as e:
         logger.error(f"Failed to start server: {str(e)}")

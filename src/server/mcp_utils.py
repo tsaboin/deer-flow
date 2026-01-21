@@ -30,7 +30,12 @@ async def _get_tools_from_client_session(
     Raises:
         Exception: If there's an error during the process
     """
-    async with client_context_manager as (read, write, _):
+    async with client_context_manager as context_result:
+        # Access by index to be safe
+        read = context_result[0]
+        write = context_result[1]
+        # Ignore any additional values
+
         async with ClientSession(
             read, write, read_timeout_seconds=timedelta(seconds=timeout_seconds)
         ) as session:
@@ -47,18 +52,22 @@ async def load_mcp_tools(
     args: Optional[List[str]] = None,
     url: Optional[str] = None,
     env: Optional[Dict[str, str]] = None,
-    timeout_seconds: int = 60,  # Longer default timeout for first-time executions
+    headers: Optional[Dict[str, str]] = None,
+    timeout_seconds: Optional[int] = 30,  # Reasonable default timeout
+    sse_read_timeout: Optional[int] = None,
 ) -> List:
     """
     Load tools from an MCP server.
 
     Args:
-        server_type: The type of MCP server connection (stdio or sse)
+        server_type: The type of MCP server connection (stdio, sse, or streamable_http)
         command: The command to execute (for stdio type)
         args: Command arguments (for stdio type)
-        url: The URL of the SSE server (for sse type)
-        env: Environment variables
-        timeout_seconds: Timeout in seconds (default: 60 for first-time executions)
+        url: The URL of the SSE/HTTP server (for sse/streamable_http type)
+        env: Environment variables (for stdio type)
+        headers: HTTP headers (for sse/streamable_http type)
+        timeout_seconds: Timeout in seconds (default: 30)
+        sse_read_timeout: SSE read timeout in seconds (for sse type, default: same as timeout_seconds)
 
     Returns:
         List of available tools from the MCP server
@@ -89,8 +98,16 @@ async def load_mcp_tools(
                     status_code=400, detail="URL is required for sse type"
                 )
 
+            # Build kwargs conditionally to avoid passing None values
+            sse_kwargs = {"url": url, "headers": headers}
+            if timeout_seconds is not None:
+                sse_kwargs["timeout"] = timeout_seconds
+            if sse_read_timeout is not None:
+                sse_kwargs["sse_read_timeout"] = sse_read_timeout
+
             return await _get_tools_from_client_session(
-                sse_client(url=url), timeout_seconds
+                sse_client(**sse_kwargs),
+                timeout_seconds if timeout_seconds is not None else 30,
             )
 
         elif server_type == "streamable_http":
@@ -99,8 +116,14 @@ async def load_mcp_tools(
                     status_code=400, detail="URL is required for streamable_http type"
                 )
 
+            # Build kwargs conditionally to avoid passing None values
+            http_kwargs = {"url": url, "headers": headers}
+            if timeout_seconds is not None:
+                http_kwargs["timeout"] = timeout_seconds
+
             return await _get_tools_from_client_session(
-                streamablehttp_client(url=url), timeout_seconds
+                streamablehttp_client(**http_kwargs),
+                timeout_seconds if timeout_seconds is not None else 30,
             )
 
         else:

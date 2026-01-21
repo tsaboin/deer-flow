@@ -13,6 +13,14 @@
 
 Actualmente, DeerFlow ha ingresado oficialmente al Centro de Aplicaciones FaaS de Volcengine. Los usuarios pueden experimentarlo en línea a través del enlace de experiencia para sentir intuitivamente sus potentes funciones y operaciones convenientes. Al mismo tiempo, para satisfacer las necesidades de implementación de diferentes usuarios, DeerFlow admite la implementación con un clic basada en Volcengine. Haga clic en el enlace de implementación para completar rápidamente el proceso de implementación y comenzar un viaje de investigación eficiente.
 
+DeerFlow ha integrado recientemente el conjunto de herramientas de búsqueda y rastreo inteligente desarrollado independientemente por BytePlus - [InfoQuest (admite experiencia gratuita en línea)](https://docs.byteplus.com/en/docs/InfoQuest/What_is_Info_Quest)
+
+<a href="https://docs.byteplus.com/en/docs/InfoQuest/What_is_Info_Quest" target="_blank">
+  <img 
+    src="https://sf16-sg.tiktokcdn.com/obj/eden-sg/hubseh7bsbps/20251208-160108.png"   alt="infoquest_bannar" 
+  />
+</a>
+
 Por favor, visita [nuestra página web oficial](https://deerflow.tech/) para más detalles.
 
 ## Demostración
@@ -138,6 +146,9 @@ Este proyecto también incluye una Interfaz Web, que ofrece una experiencia inte
 # En Windows
 bootstrap.bat -d
 ```
+> [!NOTA]
+> Por defecto, el servidor backend se enlaza a 127.0.0.1 (localhost) por razones de seguridad. Si necesitas permitir conexiones externas (por ejemplo, al desplegar en un servidor Linux), puedes modificar el host del servidor a 0.0.0.0 en el script de arranque (uv run server.py --host 0.0.0.0).
+> Por favor, asegúrate de que tu entorno esté correctamente protegido antes de exponer el servicio a redes externas.
 
 Abre tu navegador y visita [`http://localhost:3000`](http://localhost:3000) para explorar la interfaz web.
 
@@ -152,6 +163,13 @@ DeerFlow soporta múltiples motores de búsqueda que pueden configurarse en tu a
   - Requiere `TAVILY_API_KEY` en tu archivo `.env`
   - Regístrate en: <https://app.tavily.com/home>
 
+- **InfoQuest** (recomendado): Un conjunto de herramientas inteligentes de búsqueda y rastreo optimizadas para IA, desarrollado por BytePlus
+  - Requiere `INFOQUEST_API_KEY` en tu archivo `.env`
+  - Soporte para filtrado por rango de fecha y filtrado de sitios web
+  - Proporciona resultados de búsqueda y extracción de contenido de alta calidad
+  - Regístrate en: <https://console.byteplus.com/infoquest/infoquests>
+  - Visita https://docs.byteplus.com/es/docs/InfoQuest/What_is_Info_Quest para obtener más información
+
 - **DuckDuckGo**: Motor de búsqueda centrado en la privacidad
 
   - No requiere clave API
@@ -165,11 +183,37 @@ DeerFlow soporta múltiples motores de búsqueda que pueden configurarse en tu a
   - No requiere clave API
   - Especializado en artículos científicos y académicos
 
+- **Searx/SearxNG**: Motor de metabúsqueda autoalojado
+  - Requiere `SEARX_HOST` en tu archivo `.env`
+  - Compatible con Searx o SearxNG
+
 Para configurar tu motor de búsqueda preferido, establece la variable `SEARCH_API` en tu archivo `.env`:
 
 ```bash
-# Elige uno: tavily, duckduckgo, brave_search, arxiv
+# Elige uno: tavily, infoquest, duckduckgo, brave_search, arxiv
 SEARCH_API=tavily
+```
+
+### Herramientas de Rastreo
+
+- **Jina** (predeterminado): Herramienta gratuita de rastreo de contenido web accesible
+  - No se requiere clave API para usar funciones básicas
+  - Al usar una clave API, se obtienen límites de tasa de acceso más altos
+  - Visite <https://jina.ai/reader> para obtener más información
+
+- **InfoQuest** (recomendado): Conjunto de herramientas inteligentes de búsqueda y rastreo optimizadas para IA, desarrollado por BytePlus
+  - Requiere `INFOQUEST_API_KEY` en tu archivo `.env`
+  - Proporciona parámetros de rastreo configurables
+  - Admite configuración de tiempo de espera personalizada
+  - Ofrece capacidades más potentes de extracción de contenido
+  - Visita <https://docs.byteplus.com/es/docs/InfoQuest/What_is_Info_Quest> para obtener más información
+
+Para configurar su herramienta de rastreo preferida, establezca lo siguiente en su archivo `conf.yaml`:
+
+```yaml
+CRAWLER_ENGINE:
+  # Tipo de motor: "jina" (predeterminado) o "infoquest"
+  engine: infoquest
 ```
 
 ## Características
@@ -186,8 +230,8 @@ SEARCH_API=tavily
 
 - 🔍 **Búsqueda y Recuperación**
 
-  - Búsqueda web a través de Tavily, Brave Search y más
-  - Rastreo con Jina
+  - Búsqueda web a través de Tavily, InfoQuest, Brave Search y más
+  - Rastreo con Jina e InfoQuest
   - Extracción avanzada de contenido
 
 - 🔗 **Integración Perfecta con MCP**

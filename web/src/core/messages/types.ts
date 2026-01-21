@@ -12,7 +12,8 @@ export interface Message {
     | "researcher"
     | "coder"
     | "reporter"
-    | "podcast";
+    | "podcast"
+    | "analyst";
   role: MessageRole;
   isStreaming?: boolean;
   content: string;
@@ -42,4 +43,5 @@ export interface ToolCallRuntime {
 export interface Resource {
   uri: string;
   title: string;
+  description?: string;
 }

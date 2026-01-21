@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 
 class StepType(str, Enum):
     RESEARCH = "research"
+    ANALYSIS = "analysis"
     PROCESSING = "processing"
 
 
@@ -27,7 +28,7 @@ class Plan(BaseModel):
         ..., description="e.g. 'en-US' or 'zh-CN', based on the user's language"
     )
     has_enough_context: bool
-    thought: str
+    thought: str = Field(default="", description="Thinking process for the plan")
     title: str
     steps: List[Step] = Field(
         default_factory=list,

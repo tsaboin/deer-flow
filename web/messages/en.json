@@ -32,16 +32,32 @@
     "addNewMCPServers": "Add New MCP Servers",
     "mcpConfigDescription": "DeerFlow uses the standard JSON MCP config to create a new server.",
     "pasteConfigBelow": "Paste your config below and click \"Add\" to add new servers.",
+    "rag": {
+      "title": "Resources",
+      "description": "Manage your knowledge base resources here. Upload markdown or text files to be indexed for retrieval.",
+      "upload": "Upload",
+      "uploading": "Uploading...",
+      "uploadSuccess": "File uploaded successfully",
+      "uploadFailed": "Failed to upload file",
+      "emptyFile": "Cannot upload an empty file",
+      "loading": "Loading resources...",
+      "noResources": "No resources found. Upload a file to get started."
+    },
     "add": "Add",
     "general": {
       "title": "General",
       "autoAcceptPlan": "Allow automatic acceptance of plans",
+      "enableClarification": "Allow clarification",
+      "maxClarificationRounds": "Max clarification rounds",
+      "maxClarificationRoundsDescription": "Maximum number of clarification rounds when clarification is enabled (default: 3).",
       "maxPlanIterations": "Max plan iterations",
       "maxPlanIterationsDescription": "Set to 1 for single-step planning. Set to 2 or more to enable re-planning.",
       "maxStepsOfPlan": "Max steps of a research plan",
       "maxStepsDescription": "By default, each research plan has 3 steps.",
       "maxSearchResults": "Max search results",
-      "maxSearchResultsDescription": "By default, each search step has 3 results."
+      "maxSearchResultsDescription": "By default, each search step has 3 results.",
+      "enableWebSearch": "Enable web search",
+      "enableWebSearchDescription": "When disabled, only local RAG knowledge base will be used. Useful for environments without internet access."
     },
     "mcp": {
       "title": "MCP Servers",
@@ -49,8 +65,15 @@
       "learnMore": "learn more about MCP.",
       "enableDisable": "Enable/disable server",
       "deleteServer": "Delete server",
+      "editServer": "Edit server",
+      "refreshServer": "Refresh server",
+      "editServerDescription": "Edit the MCP server configuration",
+      "editServerNote": "Update the server configuration in JSON format",
       "disabled": "Disabled",
-      "new": "New"
+      "new": "New",
+      "invalidJson": "Invalid JSON format",
+      "validationFailed": "Validation failed",
+      "missingServerName": "Missing server name"
     },
     "about": {
       "title": "About"
@@ -66,7 +89,9 @@
       "news": "News",
       "newsDesc": "Factual, concise, and impartial journalistic style",
       "socialMedia": "Social Media",
-      "socialMediaDesc": "Concise, attention-grabbing, and shareable"
+      "socialMediaDesc": "Concise, attention-grabbing, and shareable",
+      "strategicInvestment": "Strategic Investment",
+      "strategicInvestmentDesc": "Deep, comprehensive analysis for strategic investment institutions with actionable insights"
     }
   },
   "footer": {
@@ -76,9 +101,9 @@
   },
   "chat": {
     "page": {
-        "loading": "Loading DeerFlow...",
-        "welcomeUser": "Welcome, {username}",
-        "starOnGitHub": "Star DeerFlow on GitHub"
+      "loading": "Loading DeerFlow...",
+      "welcomeUser": "Welcome, {username}",
+      "starOnGitHub": "Star DeerFlow on GitHub"
     },
     "welcome": {
       "greeting": "👋 Hello, there!",
@@ -118,7 +143,14 @@
       "generatePodcast": "Generate podcast",
       "edit": "Edit",
       "copy": "Copy",
-      "downloadReport": "Download report as markdown",
+      "downloadReport": "Download report",
+      "downloadMarkdown": "Markdown (.md)",
+      "downloadHTML": "HTML (.html)",
+      "downloadPDF": "PDF (.pdf)",
+      "downloadWord": "Word (.docx)",
+      "downloadImage": "Image (.png)",
+      "exportFailed": "Export failed, please try again",
+      "evaluateReport": "Evaluate report quality",
       "searchingFor": "Searching for",
       "reading": "Reading",
       "runningPythonCode": "Running Python code",
@@ -131,6 +163,31 @@
       "podcast": "Podcast",
       "errorGeneratingPodcast": "Error when generating podcast. Please try again.",
       "downloadPodcast": "Download podcast"
+    },
+    "evaluation": {
+      "title": "Report Quality Evaluation",
+      "description": "Evaluate your report using automated metrics and AI analysis.",
+      "evaluating": "Evaluating report...",
+      "analyzing": "Running deep analysis...",
+      "overallScore": "Overall Score",
+      "metrics": "Report Metrics",
+      "wordCount": "Word Count",
+      "citations": "Citations",
+      "sources": "Unique Sources",
+      "images": "Images",
+      "sectionCoverage": "Section Coverage",
+      "detailedAnalysis": "Detailed Analysis",
+      "deepEvaluation": "Deep Evaluation (AI)",
+      "strengths": "Strengths",
+      "weaknesses": "Areas for Improvement",
+      "scores": {
+        "factual_accuracy": "Factual Accuracy",
+        "completeness": "Completeness",
+        "coherence": "Coherence",
+        "relevance": "Relevance",
+        "citation_quality": "Citation Quality",
+        "writing_quality": "Writing Quality"
+      }
     },
     "messages": {
       "replaying": "Replaying",

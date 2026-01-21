@@ -12,6 +12,8 @@ export interface GenericMCPServerMetadata<T extends string> {
   transport: T;
   enabled: boolean;
   env?: Record<string, string>;
+  headers?: Record<string, string>;
+  timeout?: number;
   tools: MCPToolMetadata[];
   createdAt: number;
   updatedAt: number;
@@ -28,9 +30,11 @@ export type SimpleStdioMCPServerMetadata = Omit<
   "enabled" | "tools" | "createdAt" | "updatedAt"
 >;
 
-export interface SSEMCPServerMetadata extends GenericMCPServerMetadata<"sse"|"streamable_http"> {
-  transport: "sse"|"streamable_http"
+export interface SSEMCPServerMetadata
+  extends GenericMCPServerMetadata<"sse" | "streamable_http"> {
+  transport: "sse" | "streamable_http";
   url: string;
+  sse_read_timeout?: number;
 }
 
 export type SimpleSSEMCPServerMetadata = Omit<

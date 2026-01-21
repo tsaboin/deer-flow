@@ -14,6 +14,13 @@
 
 Currently, DeerFlow has officially entered the [FaaS Application Center of Volcengine](https://console.volcengine.com/vefaas/region:vefaas+cn-beijing/market). Users can experience it online through the [experience link](https://console.volcengine.com/vefaas/region:vefaas+cn-beijing/market/deerflow/?channel=github&source=deerflow) to intuitively feel its powerful functions and convenient operations. At the same time, to meet the deployment needs of different users, DeerFlow supports one-click deployment based on Volcengine. Click the [deployment link](https://console.volcengine.com/vefaas/region:vefaas+cn-beijing/application/create?templateId=683adf9e372daa0008aaed5c&channel=github&source=deerflow) to quickly complete the deployment process and start an efficient research journey.
 
+DeerFlow has newly integrated the intelligent search and crawling toolset independently developed by BytePlus--[InfoQuest (supports free online experience)](https://docs.byteplus.com/en/docs/InfoQuest/What_is_Info_Quest)
+
+<a href="https://docs.byteplus.com/en/docs/InfoQuest/What_is_Info_Quest" target="_blank">
+  <img 
+    src="https://sf16-sg.tiktokcdn.com/obj/eden-sg/hubseh7bsbps/20251208-160108.png"   alt="infoquest_bannar" 
+  />
+</a>
 
 Please visit [our official website](https://deerflow.tech/) for more details.
 
@@ -95,6 +102,7 @@ cp .env.example .env
 
 # Configure conf.yaml for your LLM model and API keys
 # Please refer to 'docs/configuration_guide.md' for more details
+# For local development, you can use Ollama or other local models
 cp conf.yaml.example conf.yaml
 
 # Install marp for ppt generation
@@ -140,6 +148,9 @@ This project also includes a Web UI, offering a more dynamic and engaging intera
 # On Windows
 bootstrap.bat -d
 ```
+> [!Note]
+> By default, the backend server binds to 127.0.0.1 (localhost) for security reasons. If you need to allow external connections (e.g., when deploying on Linux server), you can modify the server host to 0.0.0.0 in the bootstrap script(uv run server.py --host 0.0.0.0).
+> Please ensure your environment is properly secured before exposing the service to external networks.
 
 Open your browser and visit [`http://localhost:3000`](http://localhost:3000) to explore the web UI.
 
@@ -155,6 +166,13 @@ DeerFlow supports multiple search engines that can be configured in your `.env` 
   - Requires `TAVILY_API_KEY` in your `.env` file
   - Sign up at: https://app.tavily.com/home
 
+- **InfoQuest** (recommended): AI-optimized intelligent search and crawling toolset independently developed by BytePlus
+  - Requires `INFOQUEST_API_KEY` in your `.env` file
+  - Support for time range filtering and site filtering
+  - Provides high-quality search results and content extraction
+  - Sign up at: https://console.byteplus.com/infoquest/infoquests
+  - Visit https://docs.byteplus.com/en/docs/InfoQuest/What_is_Info_Quest to learn more
+
 - **DuckDuckGo**: Privacy-focused search engine
   - No API key required
 
@@ -166,25 +184,63 @@ DeerFlow supports multiple search engines that can be configured in your `.env` 
   - No API key required
   - Specialized for scientific and academic papers
 
+- **Searx/SearxNG**: Self-hosted metasearch engine
+  - Requires `SEARX_HOST` to be set in the `.env` file
+  - Supports connecting to either Searx or SearxNG
+
 To configure your preferred search engine, set the `SEARCH_API` variable in your `.env` file:
 
 ```bash
-# Choose one: tavily, duckduckgo, brave_search, arxiv
+# Choose one: tavily, infoquest, duckduckgo, brave_search, arxiv
 SEARCH_API=tavily
+```
+
+### Crawling Tools
+
+DeerFlow supports multiple crawling tools that can be configured in your `conf.yaml` file:
+
+- **Jina** (default): Freely accessible web content crawling tool
+
+- **InfoQuest** (recommended): AI-optimized intelligent search and crawling toolset developed by BytePlus
+  - Requires `INFOQUEST_API_KEY` in your `.env` file
+  - Provides configurable crawling parameters
+  - Supports custom timeout settings
+  - Offers more powerful content extraction capabilities
+  - Visit https://docs.byteplus.com/en/docs/InfoQuest/What_is_Info_Quest to learn more
+
+To configure your preferred crawling tool, set the following in your `conf.yaml` file:
+
+```yaml
+CRAWLER_ENGINE:
+  # Engine type: "jina" (default) or "infoquest"
+  engine: infoquest
 ```
 
 ### Private Knowledgebase
 
-DeerFlow support private knowledgebase such as ragflow and vikingdb, so that you can use your private documents to answer questions.
+DeerFlow supports private knowledgebase such as RAGFlow, Qdrant, Milvus, and VikingDB, so that you can use your private documents to answer questions.
 
-- **[RAGFlow](https://ragflow.io/docs/dev/)**：open source RAG engine
-   ```
+- **[RAGFlow](https://ragflow.io/docs/dev/)**: open source RAG engine
+   ```bash
    # examples in .env.example
    RAG_PROVIDER=ragflow
    RAGFLOW_API_URL="http://localhost:9388"
    RAGFLOW_API_KEY="ragflow-xxx"
    RAGFLOW_RETRIEVAL_SIZE=10
    RAGFLOW_CROSS_LANGUAGES=English,Chinese,Spanish,French,German,Japanese,Korean
+   ```
+
+- **[Qdrant](https://qdrant.tech/)**: open source vector database
+   ```bash
+   # Using Qdrant Cloud or self-hosted
+   RAG_PROVIDER=qdrant
+   QDRANT_LOCATION=https://xyz-example.eu-central.aws.cloud.qdrant.io:6333
+   QDRANT_API_KEY=your_qdrant_api_key
+   QDRANT_COLLECTION=documents
+   QDRANT_EMBEDDING_PROVIDER=openai
+   QDRANT_EMBEDDING_MODEL=text-embedding-ada-002
+   QDRANT_EMBEDDING_API_KEY=your_openai_api_key
+   QDRANT_AUTO_LOAD_EXAMPLES=true
    ```
 
 ## Features
@@ -200,20 +256,29 @@ DeerFlow support private knowledgebase such as ragflow and vikingdb, so that you
 ### Tools and MCP Integrations
 
 - 🔍 **Search and Retrieval**
-  - Web search via Tavily, Brave Search and more
-  - Crawling with Jina
+  - Web search via Tavily, InfoQuest, Brave Search and more
+  - Crawling with Jina and InfoQuest
   - Advanced content extraction
   - Support for private knowledgebase
 
 - 📃 **RAG Integration**
 
-  - Supports mentioning files from [RAGFlow](https://github.com/infiniflow/ragflow) within the input box. [Start up RAGFlow server](https://ragflow.io/docs/dev/).
+  - Supports multiple vector databases: [Qdrant](https://qdrant.tech/), [Milvus](https://milvus.io/), [RAGFlow](https://github.com/infiniflow/ragflow), VikingDB, MOI, and Dify
+  - Supports mentioning files from RAG providers within the input box
+  - Easy switching between different vector databases through configuration
 
 - 🔗 **MCP Seamless Integration**
   - Expand capabilities for private domain access, knowledge graph, web browsing and more
   - Facilitates integration of diverse research tools and methodologies
 
 ### Human Collaboration
+
+- 💬 **Intelligent Clarification Feature**
+  - Multi-turn dialogue to clarify vague research topics
+  - Improve research precision and report quality
+  - Reduce ineffective searches and token usage
+  - Configurable switch for flexible enable/disable control
+  - See [Configuration Guide - Clarification](./docs/configuration_guide.md#multi-turn-clarification-feature) for details
 
 - 🧠 **Human-in-the-loop**
   - Supports interactive modification of research plans using natural language
@@ -254,7 +319,6 @@ The system employs a streamlined workflow with the following components:
    - Manages the research flow and decides when to generate the final report
 
 3. **Research Team**: A collection of specialized agents that execute the plan:
-
    - **Researcher**: Conducts web searches and information gathering using tools like web search engines, crawling and even MCP services.
    - **Coder**: Handles code analysis, execution, and technical tasks using Python REPL tool.
      Each agent has access to specific tools optimized for their role and operates within the LangGraph framework
@@ -288,6 +352,12 @@ curl --location 'http://localhost:8000/api/tts' \
 ## Development
 
 ### Testing
+Install development dependencies:
+
+```bash
+uv pip install -e ".[test]"
+```
+
 
 Run the test suite:
 
@@ -392,10 +462,23 @@ This will enable trace visualization in LangGraph Studio and send your traces to
 3. Supports saving and loading checkpoints for workflow execution.
 4. Supports saving chat stream events for replaying conversations.
 
-Note: 
+*Note: About langgraph issue #5557* 
 The latest langgraph-checkpoint-postgres-2.0.23 have checkpointing issue, you can check the open issue:"TypeError: Object of type HumanMessage is not JSON serializable"  [https://github.com/langchain-ai/langgraph/issues/5557].
 
 To use postgres checkpoint you should install langgraph-checkpoint-postgres-2.0.21
+
+*Note: About psycopg dependencies* 
+Please read the following document before using postgres:  https://www.psycopg.org/psycopg3/docs/basic/install.html
+
+BY default, psycopg needs libpq to be installed on your system. If you don't have libpq installed, you can install psycopg with the `binary` extra to include a statically linked version of libpq mannually:
+
+```bash
+pip install psycopg[binary]
+```
+This will install a self-contained package with all the libraries needed, but binary not supported for all platform, you check the supported platform : https://pypi.org/project/psycopg-binary/#files
+
+if not supported, you can select local-installation: https://www.psycopg.org/psycopg3/docs/basic/install.html#local-installation
+
 
 The default database and collection will be automatically created if not exists.
 Default database: checkpoing_db
@@ -426,7 +509,6 @@ docker build -t deer-flow-api .
 ```
 
 Final, start up a docker container running the web server:
-
 ```bash
 # Replace deer-flow-api-app with your preferred container name
 # Start the server then bind to localhost:8000
